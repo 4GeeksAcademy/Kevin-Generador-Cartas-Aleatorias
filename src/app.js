@@ -1,8 +1,12 @@
 window.onload = function() {
-  //write your code here
-  //funcion para generar una carta mediante el button
+  let intervaloTiempo = 10; // tiempo en segundos
+  let tiempoRestante = intervaloTiempo;
+
+  // Referencias a los elementos del DOM
+  let contadorElemento = document.getElementById("tiempoRestante");
+
   function generarCarta() {
-    //definiendo los valores de los arreglos
+    // Definiendo los valores de los arreglos
     let icono = ["♦", "♥", "♠", "♣"];
     let valor = [
       "A",
@@ -21,49 +25,66 @@ window.onload = function() {
     ];
 
     let color = "";
-    //Volver aleatorio tanto numero como valor
+
+    // Volver aleatorio tanto número como valor
     let iconorandom = Math.floor(Math.random() * icono.length);
     let valorrandom = Math.floor(Math.random() * valor.length);
-    //condicion para los colores de los iconos
+
+    // Condición para los colores de los iconos
     if (icono[iconorandom] === "♦" || icono[iconorandom] === "♥") {
       color = "red";
     } else {
       color = "black";
     }
-    //doom para cambiar el color del icono de arriba
+
+    // Actualizar los elementos del DOM con los valores generados
     let valoriconohead = document.getElementById("iconohead");
     valoriconohead.textContent = icono[iconorandom];
     valoriconohead.style.color = color;
-    //doom para cambiar el numero y el color
+
     let valornumero = document.getElementById("numero");
     valornumero.innerHTML = valor[valorrandom];
     valornumero.style.color = color;
-    //doom para cambiar el color del icono de abajo
-    let valoriconofoot = document.getElementById("iconofood");
+
+    let valoriconofoot = document.getElementById("iconofoot");
     valoriconofoot.textContent = icono[iconorandom];
     valoriconofoot.style.color = color;
   }
-  //Generar una carta al cargar la página
+
+  function actualizarContador() {
+    tiempoRestante--;
+    contadorElemento.textContent = tiempoRestante;
+
+    if (tiempoRestante <= 0) {
+      generarCarta();
+      tiempoRestante = intervaloTiempo; // Reinicia el contador
+    }
+  }
+
+  // Generar una carta al cargar la página
   generarCarta();
 
-  //Agregar evento de clic al botón para generar una nueva carta
-  document.getElementById("newCardBtn").addEventListener("click", generarCarta);
+  // Agregar evento de clic al botón para generar una nueva carta
+  document.getElementById("newCardBtn").addEventListener("click", function() {
+    generarCarta();
+    tiempoRestante = intervaloTiempo; // Reinicia el contador si se genera una carta manualmente
+  });
 
-  //Temporizador para generar una nueva carta cada 5 segundos
-  setInterval(generarCarta, 5000);
+  // Iniciar el contador que actualiza cada segundo
+  setInterval(actualizarContador, 1000);
 
-  //Asignar la función de aplicar tamaño al botón
+  // Función para aplicar el tamaño de la carta según el input del usuario
   document
     .getElementById("applySizeBtn")
     .addEventListener("click", aplicarTamaño);
 };
 
-//Función para aplicar el tamaño de la carta según el input del usuario
 function aplicarTamaño() {
   let ancho = document.getElementById("cardWidth").value;
   let alto = document.getElementById("cardHeight").value;
   let tarjeta = document.getElementById("tarjeta");
-  //Condicional para traer el ancho y alto de la carta en px
+
+  // Condicional para aplicar el ancho y alto de la carta en px
   if (ancho) {
     tarjeta.style.width = ancho + "px";
   }
